@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Delete some association for projects (SFDB)</shortname>
+	<url>/delassoc</url>
+	<url>/delassoc?assoc={assoc}</url>
+	<format default="json"></format>
+	<authentication>admin</authentication>
+</webscript>
+

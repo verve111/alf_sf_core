@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Alfresco Customization" default="deploy" basedir=".">
+	<property file="build.properties" />
+	<property name="project.dir" value="." />
+	<property name="build.dir" value="${project.dir}/build" />
+	<property name="src.dir" value="${project.dir}/src" />	
+	<property name="bin.dir" value="${project.dir}/bin" />
+	<property name="metainf.dir" value="${project.dir}/META-INF" />	
+	<property name="project.name" value="alfresco-sfdb-core" />
+	<property name="package.file.zip" value="${build.dir}/${project.name}.zip" />
+	<property name="package.file.jar" value="${build.dir}/${project.name}.jar" />	
+	<property name="config.dir" value="${project.dir}/config" />
+	<!--property name="web.dir" value="${project.dir}/web" /-->
+	<!--property name="extension.dir" value="/web-extension" /-->
+
+	<target name="clean" description="Removes all generated files">
+		<delete dir="${bin.dir}" />	
+		<delete dir="${build.dir}" />
+	</target>
+
+	<!--target name="clean-tomcat" description="Removes deployed web-extension directory" >
+		<!-delete dir="${alfresco.web.dir}/alfresco/web-extension" /->
+		<delete dir="${alfresco.web.dir}/alfresco/extension" />
+		<!-delete dir="${share.web.dir}/WEB-INF/classes/alfresco/web-extension" /->
+		<delete dir="${share.web.dir}/WEB-INF/classes/META-INF" />
+	</target-->
+
+	<target name="setup" description="Creates the ${bin.dir} directories">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<!--  target name="package-extension" depends="setup" description="Creates a zip called ${package.file.zip} which can be unzipped on top of an exploded Alfresco web app">
+		<delete file="${package.file.zip}" />
+		<zip destfile="${package.file.zip}">
+			<zipfileset dir="${config.dir}" prefix="WEB-INF/classes/alfresco" />
+		</zip>
+	</target-->
+	
+	<target name="package-extension" description="Creates a jar called ${package.file.jar} which can be deployed on top of an exploded Alfresco web app">
+		<delete file="${package.file.jar}" />
+		<jar jarfile="${package.file.jar}">
+			<zipfileset dir="${bin.dir}" />
+			<!--zipfileset dir="${bin.dir}/alfresco/extension/de/evaluators" prefix="alfresco/extension/de/evaluators"/>
+			<zipfileset dir="${web.dir}" excludes="META-INF/**" /-->
+		</jar>
+	</target>	
+	
+	<path id="classpath.embedded">
+		<fileset dir="${project.dir}/lib" includes="**/*.jar" />
+	</path>
+	
+	<!--target name="copyComponents" description="copies components to share/meta-inf dir">
+		<copy todir="${share.web.dir}/WEB-INF/classes/META-INF">
+			<fileset dir="${metainf.dir}"/>
+		</copy>
+	</target-->	
+	
+	<target name="compile" description="compiles src to the build/classes folder">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" source="1.6" target="1.6" debug="on" fork="yes">
+			<classpath refid="classpath.embedded" />
+		</javac>
+		<copy todir="${bin.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java"/>
+		</copy>
+	</target>
+	
+	<target name="deploy" depends="clean, setup, compile, package-extension" 
+			description="Unzips the ${package.file.zip} into ${alfresco.web.dir}">
+		<!-- unzip src="${package.file.zip}" dest="${share.web.dir}" /-->
+		<copy file="${package.file.jar}" todir="${alfresco.web.lib}"/>
+		<!--copy todir="${alfresco.web.dir}">
+			<fileset dir="${bin.dir}"/>
+		</copy-->	
+	</target>
+
+</project>

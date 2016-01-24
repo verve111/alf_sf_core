@@ -1,0 +1,17 @@
+.tern-project
+.bpmn
+
+## Alfresco
+solr.log*
+share.log*
+alfresco.log*
+
+### Eclipse Files ###
+.classpath
+.project
+.settings/
+bin/
+build/
+
+### Maven Files ###
+target/

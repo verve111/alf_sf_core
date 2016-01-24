@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<bean id="webscript.projecttpl.get" class="com.sfdb.GetProjectMainTemplateWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+		<property name="searchService" ref="SearchService" />	
+	</bean>
+	<bean id="webscript.propertiesrename.get" class="com.sfdb.PropsRenameWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+		<property name="searchService" ref="SearchService" />	
+	</bean>
+	<bean id="webscript.delassoc.get" class="com.sfdb.DeleteAssociationWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+		<property name="searchService" ref="SearchService" />	
+	</bean>		
+	 
+	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent"
+		depends-on="becpgCoreBootstrapMessages">
+		<property name="resourceBundles">
+			<list>
+				<value>alfresco.extension.messages.sfdb_localization</value>
+			</list>
+		</property>
+	</bean>		 
+	
+</beans>

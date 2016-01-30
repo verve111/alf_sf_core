@@ -36,8 +36,15 @@ public class PropsRenameWebscript extends AbstractWebScript {
 
 	@Override
 	public void execute(WebScriptRequest req, WebScriptResponse resp) throws IOException {
-		String newName = req.getParameterValues("name") == null ? "Home" : req.getParameterValues("name")[0];
+		String listid =  req.getParameterValues("listid") == null ? null : req.getParameterValues("listid")[0];
+		String newName = req.getParameterValues("newname") == null ? null : req.getParameterValues("newname")[0];
 		JSONArray obj = new JSONArray();
+		if (listid == null) {
+			obj.put("required listid parameter is not set");
+			String jsonString = obj.toString();
+			resp.getWriter().write(jsonString);
+			return;
+		}
 		ResultSet resultSet = searchService.query(new StoreRef(StoreRef.PROTOCOL_WORKSPACE, "SpacesStore"),
 				SearchService.LANGUAGE_LUCENE,
 				MessageFormat.format("ASPECT:\"{0}\" OR TYPE:\"{1}\"", "bcpg:entityTplAspect", "pjt:project"));
@@ -49,14 +56,20 @@ public class PropsRenameWebscript extends AbstractWebScript {
 						null)) {
 					NodeRef dataListsFolder = assoc.getChildRef();
 					List<String> list = new ArrayList<String>();
-					list.add("View-properties");
-					for (ChildAssociationRef assoc2 : nodeService.getChildrenByName(dataListsFolder,
-							ContentModel.ASSOC_CONTAINS, list)) {
-						NodeRef dataList = assoc2.getChildRef();
-						if (nodeService.getType(dataList).equals(DataListModel.TYPE_DATALIST)) {
-							nodeService.setProperty(dataList, ContentModel.PROP_TITLE, newName);
-							obj.put(entityName);
+					if (!NodeRef.isNodeRef(listid)) {
+						list.add(listid);
+						for (ChildAssociationRef assoc2 : nodeService.getChildrenByName(dataListsFolder,
+								ContentModel.ASSOC_CONTAINS, list)) {
+							NodeRef dataList = assoc2.getChildRef();
+							if (nodeService.getType(dataList).equals(DataListModel.TYPE_DATALIST)) {
+								if (newName != null) {
+									nodeService.setProperty(dataList, ContentModel.PROP_TITLE, newName);
+								}
+								obj.put(entityName);
+							}
 						}
+					} else {
+						
 					}
 					break;
 				}

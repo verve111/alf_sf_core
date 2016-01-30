@@ -1,0 +1,9 @@
+<webscript>
+	<shortname>Update Properties Label (SFDB)</shortname>
+	<url>/listrename?listid={listid}</url>
+	<url>/listrename?listid={listid}&amp;amp;newname={name}</url>
+	<description>Renames beCpg datalist of any project and project template</description>
+	<format default="json"></format>
+	<authentication>admin</authentication>
+</webscript>
+

@@ -7,7 +7,7 @@
         <property name="nodeService" ref="nodeService" />
 		<property name="searchService" ref="SearchService" />	
 	</bean>
-	<bean id="webscript.propertiesrename.get" class="com.sfdb.PropsRenameWebscript"
+	<bean id="webscript.listrename.get" class="com.sfdb.PropsRenameWebscript"
 		parent="webscript">
         <property name="nodeService" ref="nodeService" />
 		<property name="searchService" ref="SearchService" />	

@@ -18,8 +18,7 @@
 		<property name="searchService" ref="SearchService" />	
 	</bean>		
 	 
-	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent"
-		depends-on="becpgCoreBootstrapMessages">
+	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
 		<property name="resourceBundles">
 			<list>
 				<value>alfresco.extension.messages.sfdb_localization</value>

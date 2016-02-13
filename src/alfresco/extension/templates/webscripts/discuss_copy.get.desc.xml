@@ -1,0 +1,7 @@
+<webscript>
+	<shortname>Copy discussions from one site to another (SFDB)</shortname>
+	<url>/discuss_copy?sourcesite={sourcesite}&amp;amp;targetsite={targetsite}</url>
+	<description>Copies discussions from one site to another (SFDB)</description>
+	<format default="json"></format>
+	<authentication>admin</authentication>
+</webscript>

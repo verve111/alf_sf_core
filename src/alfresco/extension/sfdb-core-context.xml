@@ -16,6 +16,13 @@
 		parent="webscript">
         <property name="nodeService" ref="nodeService" />
 		<property name="searchService" ref="SearchService" />	
+	</bean>
+	<bean id="webscript.discuss_copy.get" class="com.sfdb.DiscussionsCopyWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+		<property name="searchService" ref="SearchService" />
+		<property name="siteService" ref="SiteService"/>		
+		<property name="discussionService" ref="DiscussionService" />			
 	</bean>		
 	 
 	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">

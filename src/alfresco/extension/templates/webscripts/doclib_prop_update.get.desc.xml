@@ -1,0 +1,6 @@
+<webscript>
+	<shortname>Update doclib property (SFDB)</shortname>
+	<url>/doclib_prop_update?prop={propname}&amp;amp;value={newvalue}</url>
+	<format default="json"></format>
+	<authentication>admin</authentication>
+</webscript>

@@ -24,6 +24,11 @@
 		<property name="siteService" ref="SiteService"/>		
 		<property name="discussionService" ref="DiscussionService" />			
 	</bean>		
+	<bean id="webscript.doclib_prop_update.get" class="com.sfdb.DoclibPropUpdateWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+		<property name="siteService" ref="SiteService"/>		
+	</bean>	
 	 
 	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
 		<property name="resourceBundles">

@@ -1,7 +1,7 @@
 <webscript>
 	<shortname>Get main prj template (SFDB)</shortname>
 	<url>/projecttpl</url>
-	<description>
+	<description>Used to find prj template to apply it when creating a new project
 	</description>
 	<format default="json"></format>
 	<authentication runas="admin">user</authentication>

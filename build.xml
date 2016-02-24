@@ -69,6 +69,7 @@
 			description="Unzips the ${package.file.zip} into ${alfresco.web.dir}">
 		<!-- unzip src="${package.file.zip}" dest="${share.web.dir}" /-->
 		<copy file="${package.file.jar}" todir="${alfresco.web.lib}"/>
+		<copy file="${package.file.jar}" todir="${alfresco.web.lib2}"/>
 		<!--copy todir="${alfresco.web.dir}">
 			<fileset dir="${bin.dir}"/>
 		</copy-->	

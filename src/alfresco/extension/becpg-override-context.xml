@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+	<import resource="classpath:alfresco/module/becpg-project-core/context/project-context.xml"/>
+	<!-- Formulation -->
+	<bean id="projectFormulationChain" class="fr.becpg.repo.formulation.FormulationChain" init-method="init">
+		<property name="handlers">
+			<list>
+				<!--bean class="fr.becpg.repo.project.formulation.PlanningFormulationHandler" />
+				<bean class="fr.becpg.repo.project.formulation.BudgetFormulationHandler" >
+				  <property name="associationService" ref="associationService"/>
+				  <property name="nodeService" ref="nodeService"/>
+				  <property name="alfrescoRepository" ref="alfrescoRepository" />
+				</bean>
+				<bean class="fr.becpg.repo.project.formulation.ScoreFormulationHandler" />
+				<bean class="fr.becpg.repo.project.formulation.TaskStateFormulationHandler">
+					<property name="projectWorkflowService" ref="projectWorkflowService" />
+					<property name="projectService" ref="projectService" />
+					<property name="projectActivityService" ref="projectActivityService" />
+					<property name="nodeService" ref="nodeService"/>
+					<property name="associationService" ref="associationService"/>
+				</bean-->
+			</list>
+		</property>
+		<property name="formulationService" ref="formulationService" />
+		<property name="contextClass" value="fr.becpg.repo.project.data.ProjectData" />
+	</bean>
+	</beans>

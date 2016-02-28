@@ -34,6 +34,11 @@
         <property name="nodeService" ref="nodeService" />
         <property name="dictionaryService" ref="DictionaryService"/>
 	</bean>		
+	<bean id="webscript.prj_code_upd.get" class="com.sfdb.ProjectCodeUpdateWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+		<property name="searchService" ref="SearchService" />	
+	</bean>	
 	 
 	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
 		<property name="resourceBundles">

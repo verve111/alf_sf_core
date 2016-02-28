@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Update project code (SFDB)</shortname>
+	<url>/prj_code_upd</url>
+	<url>/prj_code_upd?oldid={oldCodePrefix}&amp;newid={newCodePrefix}</url>
+	<format default="json"></format>
+	<authentication>admin</authentication>
+</webscript>
+

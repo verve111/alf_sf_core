@@ -1,0 +1,6 @@
+<webscript>
+	<shortname>Update node property (SFDB)</shortname>
+	<url>/set_prop?id={nodeid}&amp;prop={propname}&amp;value={newvalue}</url>
+	<format default="json"></format>
+	<authentication>admin</authentication>
+</webscript>

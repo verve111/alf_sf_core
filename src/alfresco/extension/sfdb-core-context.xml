@@ -28,7 +28,12 @@
 		parent="webscript">
         <property name="nodeService" ref="nodeService" />
 		<property name="siteService" ref="SiteService"/>		
-	</bean>	
+	</bean>
+	<bean id="webscript.set_prop.get" class="com.sfdb.SetPropWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+        <property name="dictionaryService" ref="DictionaryService"/>
+	</bean>		
 	 
 	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
 		<property name="resourceBundles">

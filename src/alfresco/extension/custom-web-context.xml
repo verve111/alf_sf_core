@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+
+<!-- the last loaded context by Alfresco -->
+<!-- (see web-application-context.xml) -->
+
+<beans>
+    <!-- overridden from web-scripts-application-context.xml: Creates a new Calendar Event from the site calendar -->
+	<bean id="webscript.org.alfresco.slingshot.calendar.event.post"
+		class="com.sfdb.extended.CalendarEntryPostExt" parent="abstractCalendarWebScript">
+	</bean>
+      <!-- Edits an existing Calendar Event from the site calendar -->
+   <!-- bean id="webscript.org.alfresco.slingshot.calendar.event.put"
+         class="org.alfresco.repo.web.scripts.calendar.CalendarEntryPut"
+         parent="abstractCalendarWebScript">
+   </bean>
+   <bean id="webscript.org.alfresco.slingshot.calendar.event.delete"
+         class="org.alfresco.repo.web.scripts.calendar.CalendarEntryDelete"
+         parent="abstractCalendarWebScript">
+   </bean-->
+   
+	<bean id="calendarCrons" class="com.sfdb.extended.CalendarCrons" init-method="init">
+	</bean>   
+</beans>	

@@ -26,4 +26,17 @@
 		<property name="formulationService" ref="formulationService" />
 		<property name="contextClass" value="fr.becpg.repo.project.data.ProjectData" />
 	</bean>
-	</beans>
+	
+    <bean id="projectFormulationTrigger" class="org.alfresco.util.CronTriggerBean"  >
+        <property name="jobDetail">
+            <ref bean="projectFormulationJob"/>
+        </property>
+        <property name="scheduler">
+            <ref bean="schedulerFactory"/>
+        </property>
+        <property name="cronExpression">
+        	<!-- executed once in 2099, anyway the handlers in projectFormulationChain are disabled -->
+            <value>0 0 0 1 1 ? 2099</value>
+        </property>
+    </bean>
+</beans>

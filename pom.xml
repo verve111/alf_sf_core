@@ -34,28 +34,12 @@
 			<artifactId>alfresco-remote-api</artifactId>
 			<version>${alf.version}</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-webscripts</artifactId>
-					<groupId>
-						org.springframework.extensions.surf
-					</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>		
 		<dependency>
 			<groupId>org.alfresco</groupId>
 			<artifactId>alfresco-repository</artifactId>
 			<version>${alf.version}</version>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>spring-webscripts</artifactId>
-					<groupId>
-						org.springframework.extensions.surf
-					</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.alfresco.surf</groupId>

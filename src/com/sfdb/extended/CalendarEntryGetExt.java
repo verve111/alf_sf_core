@@ -21,6 +21,9 @@ public class CalendarEntryGetExt extends CalendarEntryGet {
 		CalendarEntry entry = calendarService.getCalendarEntry(site.getShortName(), eventName);
 		String cronExpr = (String) nodeService.getProperty(entry.getNodeRef(), CalendarCrons._IA_CRON);
 		result.put("cronExpr", cronExpr);
+		Object o = nodeService.getProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_IS_ACTIVE);
+		boolean isActive = o != null && (Boolean) o == true;
+		result.put("isactive", isActive);
 		return map;
 	}
 

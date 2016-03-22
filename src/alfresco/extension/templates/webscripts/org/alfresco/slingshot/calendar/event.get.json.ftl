@@ -24,6 +24,7 @@
    "recurrence": "${result.recurrence}",
    "isoutlook": "${result.isoutlook?string}",
    <#if result.cronExpr??>"cronExpr": "${result.cronExpr?string}",</#if>
+   <#if result.isactive??>"isactive": "${result.isactive?string}",</#if>
 
    "permissions":
    {

@@ -39,6 +39,9 @@ public class CalendarEntryPutExt extends CalendarEntryPut {
 			} else {
 				logger.warn("cronExpr is null, noderef = " + nr);
 			}
+			String isActive = getOrNull(json, "isactive");
+			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_IS_ACTIVE,
+					"on".equals(isActive) ? Boolean.TRUE : Boolean.FALSE);
 			calendarCrons.updateEvent(nr, oldCron, newCron);
 		} catch (JSONException e) {
 			logger.error("JSONException", e);

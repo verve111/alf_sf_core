@@ -38,6 +38,7 @@ public class CalendarEntryPostExt extends AbstractCalendarWebScript {
 		// TODO Handle All Day events properly, including timezones
 		boolean isAllDay = false;
 		String cron = null;
+		String isActive = null;
 		try {
 			// Grab the properties
 			entry.setTitle(getOrNull(json, "what"));
@@ -45,6 +46,7 @@ public class CalendarEntryPostExt extends AbstractCalendarWebScript {
 			entry.setLocation(getOrNull(json, "where"));
 			entry.setSharePointDocFolder(getOrNull(json, "docfolder"));
 			cron = getOrNull(json, "cron");
+			isActive = getOrNull(json, "isactive");
 
 			// Handle the dates
 			isAllDay = extractDates(entry, json);
@@ -102,9 +104,10 @@ public class CalendarEntryPostExt extends AbstractCalendarWebScript {
 		model.put("result", result);
 		
 		// SFDB extension
-		if (cron != null) {
+		if (cron != null && "on".equals(isActive)) {
 			result.put("cronExpr", cron);
 			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON, cron);
+			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_IS_ACTIVE, Boolean.TRUE);
 			calendarCrons.startEvent(entry.getNodeRef(), cron);
 		}
 		

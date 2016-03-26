@@ -1,7 +1,10 @@
 package com.sfdb.extended;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -11,6 +14,7 @@ import org.alfresco.service.cmr.calendar.CalendarEntry;
 import org.alfresco.service.cmr.calendar.CalendarEntryDTO;
 import org.alfresco.service.cmr.site.SiteInfo;
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.extensions.webscripts.Cache;
 import org.springframework.extensions.webscripts.Status;
@@ -37,8 +41,10 @@ public class CalendarEntryPostExt extends AbstractCalendarWebScript {
 		CalendarEntry entry = new CalendarEntryDTO();
 		// TODO Handle All Day events properly, including timezones
 		boolean isAllDay = false;
+		// SFDB
 		String cron = null;
 		String isActive = null;
+		JSONArray recipients = null;
 		try {
 			// Grab the properties
 			entry.setTitle(getOrNull(json, "what"));
@@ -47,6 +53,7 @@ public class CalendarEntryPostExt extends AbstractCalendarWebScript {
 			entry.setSharePointDocFolder(getOrNull(json, "docfolder"));
 			cron = getOrNull(json, "cron");
 			isActive = getOrNull(json, "isactive");
+			recipients = (JSONArray) json.get("recipients");
 
 			// Handle the dates
 			isAllDay = extractDates(entry, json);
@@ -104,13 +111,22 @@ public class CalendarEntryPostExt extends AbstractCalendarWebScript {
 		model.put("result", result);
 		
 		// SFDB extension
-		if (cron != null && "on".equals(isActive)) {
-			result.put("cronExpr", cron);
-			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON, cron);
+		if (cron != null) {
+			//result.put("cronExpr", cron);			
+			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON, cron);			
+		}
+		if ("on".equals(isActive)) {
 			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_IS_ACTIVE, Boolean.TRUE);
+		}
+		if (recipients != null) {
+			Object[] arr = recipients.toArray();
+			String[] stringArray = Arrays.copyOf(arr, arr.length, String[].class);
+			List<String> list = Arrays.asList(stringArray);
+			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_RECIPIENTS, (Serializable) list);			
+		}
+		if (cron != null && "on".equals(isActive) && recipients != null) {
 			calendarCrons.startEvent(entry.getNodeRef(), cron);
 		}
-		
 		return model;
 	}
 }

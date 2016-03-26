@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.alfresco.model.ContentModel;
 import org.alfresco.repo.calendar.CalendarModel;
 import org.alfresco.repo.processor.BaseProcessorExtension;
 import org.alfresco.repo.security.authentication.AuthenticationUtil;
@@ -34,14 +33,14 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 
 	public static final QName _IA_CRON = QName.createQName(CalendarModel.CALENDAR_MODEL_URL, "cron");
 	public static final QName _IA_CRON_IS_ACTIVE = QName.createQName(CalendarModel.CALENDAR_MODEL_URL, "cronIsActive");
+	public static final QName _IA_CRON_RECIPIENTS = QName.createQName(CalendarModel.CALENDAR_MODEL_URL, "cronRecipients");
 	private Logger logger = LoggerFactory.getLogger(CalendarCrons.class);
 	private ApplicationContext context;
 	private int counter;
 
-	//synchronizedMap
-	private Map<NodeRef, CalendarEntity> map = Collections
-			.synchronizedMap(new HashMap<NodeRef, CalendarEntity>());	
-	
+	// synchronizedMap
+	private Map<NodeRef, CronScheduled> map = Collections.synchronizedMap(new HashMap<NodeRef, CronScheduled>());
+
 	private SearchService searchService;
 	private NodeService nodeService;
 
@@ -76,8 +75,7 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 		// more info:
 		// https://forums.alfresco.com/forum/developer-discussions/repository-services/executing-search-solr-alfresco-startup-02272015-0806
 		sp.setLanguage(SearchService.LANGUAGE_CMIS_ALFRESCO);
-		sp.setQuery(MessageFormat.format(
-				"select * from ia:calendarEvent where ia:fromDate > TIMESTAMP ''{0}''",
+		sp.setQuery(MessageFormat.format("select * from ia:calendarEvent where ia:fromDate > TIMESTAMP ''{0}''",
 				DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd'T'HH:mm:ss.SSSZZ")));
 		ResultSet results = null;
 		try {
@@ -86,7 +84,7 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 				NodeRef currentNodeRef = row.getNodeRef();
 				String cronExpr = (String) nodeService.getProperty(currentNodeRef, _IA_CRON);
 				Object o = nodeService.getProperty(currentNodeRef, _IA_CRON_IS_ACTIVE);
-				boolean isActive = o != null && (Boolean) o == true;				
+				boolean isActive = o != null && (Boolean) o == true;
 				if (cronExpr != null && isActive) {
 					startEvent(currentNodeRef, cronExpr);
 				}
@@ -97,21 +95,19 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 			}
 		}
 	}
-	
-	public CalendarEntity startEvent(NodeRef nodeRef, String cronExpr) {
-		CalendarEntity ent = null;
+
+	public CronScheduled startEvent(NodeRef nodeRef, String cronExpr) {
 		Date startDate = (Date) nodeService.getProperty(nodeRef, CalendarModel.PROP_FROM_DATE);
 		Object o = nodeService.getProperty(nodeRef, _IA_CRON_IS_ACTIVE);
 		boolean isActive = o != null && (Boolean) o == true;
-		System.out.println("startEvent isActive: " + isActive);
 		boolean isStartAfter = startDate.after(new Date());
+		CronScheduled cronScheduled = null;
 		if (isStartAfter && isActive) {
-			String creator = (String) nodeService.getProperty(nodeRef, ContentModel.PROP_CREATOR);
-			ent = new CalendarEntity(getCronScheduled(nodeRef, cronExpr), cronExpr, creator);
-			map.put(nodeRef, ent);
+			cronScheduled = getCronScheduled(nodeRef, cronExpr);
+			map.put(nodeRef, cronScheduled);
 			log("Started: cron calendar event", cronExpr, nodeRef);
 		}
-		return ent;
+		return cronScheduled;
 	}
 
 	private CronScheduled getCronScheduled(NodeRef nodeRef, String cronExpr) {
@@ -119,22 +115,20 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 				counter++);
 		return cronScheduled;
 	}
-	
+
 	public void updateEvent(NodeRef nodeRef, String oldCron, String newCron) {
 		boolean cronChanged = oldCron != null && newCron != null && !oldCron.equals(newCron);
 		// possibly changed start date
 		Date startDate = (Date) nodeService.getProperty(nodeRef, CalendarModel.PROP_FROM_DATE);
 		boolean isStartAfter = startDate.after(new Date());
 		boolean isActive = (Boolean) nodeService.getProperty(nodeRef, _IA_CRON_IS_ACTIVE);
-		System.out.println("updateEvent isActive: " + isActive);		
-		CalendarEntity ent = map.get(nodeRef);
-		if (ent == null) {
-			ent = startEvent(nodeRef, newCron);
-		} 
-		if (ent != null) {
+		CronScheduled cronScheduled = map.get(nodeRef);
+		if (cronScheduled == null) {
+			cronScheduled = startEvent(nodeRef, newCron);
+		}
+		if (cronScheduled != null) {
 			if (isStartAfter && isActive) {
 				if (cronChanged) {
-					CronScheduled cronScheduled = ent.cronScheduled;
 					cronScheduled.setCronExpression(newCron);
 					rescheduleJobWithNewCron(cronScheduled, newCron);
 					logger.info("Cron changed, oldval =" + oldCron + ", newval=" + newCron + ", noderef=" + nodeRef);
@@ -144,26 +138,26 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 			}
 		}
 	}
-	
+
 	public void removeEvent(NodeRef nodeRef) {
 		if (nodeRef != null) {
 			removeJob(nodeRef);
 		}
 	}
-	
+
 	private void removeJob(NodeRef nodeRef) {
 		if (map.get(nodeRef) != null) {
-			CronScheduled cron = map.get(nodeRef).cronScheduled;
+			CronScheduled cron = map.get(nodeRef);
 			try {
 				cron.getScheduler().deleteJob(cron.getJobName(), cron.getJobGroup());
-				map.remove(nodeRef);				
-				log("Removed: cron calendar event", "empty", nodeRef);		
+				map.remove(nodeRef);
+				log("Removed: cron calendar event", "empty", nodeRef);
 			} catch (SchedulerException e) {
 				logger.error("CalendarCrons :: can't stop calendar cron");
-			}	
+			}
 		}
 	}
-	
+
 	private void rescheduleJobWithNewCron(CronScheduled cronScheduled, String newCron) {
 		try {
 			Trigger old = cronScheduled.getTrigger();
@@ -180,7 +174,7 @@ public class CalendarCrons extends BaseProcessorExtension implements Application
 			logger.error("CalendarCrons :: cron expr can not be parsed/set");
 		}
 	}
-	
+
 	private void log(String prefix, String cronExpr, NodeRef nodeRef) {
 		logger.info(prefix + ", name = '" + nodeService.getProperty(nodeRef, CalendarModel.PROP_WHAT) + "', cron ='"
 				+ cronExpr + "', " + nodeRef.toString());

@@ -1,5 +1,7 @@
 package com.sfdb.extended;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.alfresco.repo.web.scripts.calendar.CalendarEntryGet;
@@ -24,6 +26,20 @@ public class CalendarEntryGetExt extends CalendarEntryGet {
 		Object o = nodeService.getProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_IS_ACTIVE);
 		boolean isActive = o != null && (Boolean) o == true;
 		result.put("isactive", isActive);
+		o = nodeService.getProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_RECIPIENTS);
+		if (o != null) {
+			@SuppressWarnings("unchecked")
+			List<String> li = (ArrayList<String>) o;
+			String res = "";
+			for (String s : li) {
+				res += "'" + s + "',"; 
+			}
+			if (res.endsWith(",")) {
+				res = res.substring(0, res.length() - 1);
+				res = "[" + res + "]";
+			}
+			result.put("recipients", res);	
+		}
 		return map;
 	}
 

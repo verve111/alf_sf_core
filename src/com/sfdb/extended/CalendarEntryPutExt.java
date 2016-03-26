@@ -1,5 +1,8 @@
 package com.sfdb.extended;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.alfresco.repo.web.scripts.calendar.CalendarEntryPut;
@@ -7,6 +10,7 @@ import org.alfresco.service.cmr.calendar.CalendarEntry;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.site.SiteInfo;
 import org.json.JSONException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +46,13 @@ public class CalendarEntryPutExt extends CalendarEntryPut {
 			String isActive = getOrNull(json, "isactive");
 			nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_IS_ACTIVE,
 					"on".equals(isActive) ? Boolean.TRUE : Boolean.FALSE);
+			JSONArray recipients = (JSONArray) json.get("recipients");;
+			if (recipients != null) {
+				Object[] arr = recipients.toArray();
+				String[] stringArray = Arrays.copyOf(arr, arr.length, String[].class);
+				List<String> list = Arrays.asList(stringArray);
+				nodeService.setProperty(entry.getNodeRef(), CalendarCrons._IA_CRON_RECIPIENTS, (Serializable) list);			
+			}			
 			calendarCrons.updateEvent(nr, oldCron, newCron);
 		} catch (JSONException e) {
 			logger.error("JSONException", e);

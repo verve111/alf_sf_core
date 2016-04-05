@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<!-- the last loaded context by Alfresco -->
+<!-- the last loaded context by Alfresco, custom-web-context.xml - hardcoded context name -->
 <!-- (see web-application-context.xml) -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"

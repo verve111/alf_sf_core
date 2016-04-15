@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Check if user should see doclib only (SFDB)</shortname>
+	<url>/is_user_doclib_only?userid={id}</url>	
+	<url>/is_user_doclib_only?userid={id}&amp;getsiteid</url>
+	<format default="json"></format>
+	<authentication>user</authentication>
+</webscript>
+

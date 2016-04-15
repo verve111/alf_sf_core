@@ -38,7 +38,13 @@
 		parent="webscript">
         <property name="nodeService" ref="nodeService" />
 		<property name="searchService" ref="SearchService" />	
-	</bean>	
+	</bean>
+	<bean id="webscript.is_user_doclib_only.get" class="com.sfdb.IsUserDocLibOnlyWebscript"
+		parent="webscript">
+        <property name="nodeService" ref="nodeService" />
+        <property name="personService" ref="PersonService"/>
+        <property name="siteService" ref="SiteService"/>        
+	</bean>			
 	 
 	<bean id="sfdbCoreBootstrapMessages" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
 		<property name="resourceBundles">

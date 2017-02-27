@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="sfcore:model" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+	<description>SFDB core model</description>
+	<version>1.0</version>
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0"
+			prefix="d" />
+		<import uri="http://www.bcpg.fr/model/becpg/1.0" prefix="bcpg" />
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>		
+	</imports>
+	<namespaces>
+		<namespace uri="http://www.sfdb.org/model/core/1.0" prefix="sfcore" />
+	</namespaces>
+	<constraints>
+		<constraint name="sfcore:todo_status" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Not Started</value>
+					<value>In Progress</value>
+					<value>Complete</value>
+					<value>On Hold</value>
+				</list>
+			</parameter>
+		</constraint>
+	</constraints>
+	<types>
+		<type name="sfcore:todoList">
+			<title>To Do List</title>
+			<parent>bcpg:entityListItem</parent>
+			<properties>
+				<property name="sfcore:todoTitle">
+					<title>Title</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="sfcore:todoDueDate">
+					<title>Due Date</title>
+					<type>d:datetime</type>
+					<mandatory>false</mandatory>
+				</property>
+				<property name="sfcore:todoPriority">
+					<title>Priority</title>
+					<type>d:int</type>
+					<mandatory>false</mandatory>
+				</property>
+				<property name="sfcore:todoStatus">
+					<title>Status</title>
+					<type>d:text</type>
+					<default>Not Started</default>
+					<constraints>
+						<constraint ref="sfcore:todo_status" />
+					</constraints>
+				</property>
+				<property name="sfcore:todoNotes">
+					<title>Notes</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+			</properties>
+			<associations>
+				<association name="sfcore:assignee">
+					<title>Assignee</title>
+					<source>
+						<mandatory>false</mandatory>
+						<many>true</many>
+					</source>
+					<target>
+						<class>cm:person</class>
+						<mandatory>false</mandatory>
+						<many>false</many>
+					</target>
+				</association>
+				<association name="sfcore:attachments">
+					<title>Attachments</title>
+					<source>
+						<mandatory>false</mandatory>
+						<many>true</many>
+					</source>
+					<target>
+						<class>cm:cmobject</class>
+						<mandatory>false</mandatory>
+						<many>true</many>
+					</target>
+				</association>
+			</associations>
+		</type>
+	</types>
+</model>

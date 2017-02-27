@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
 <beans>
+    <bean id="sfdb-model.dictionaryBootstrap" parent="dictionaryModelBootstrap" depends-on="dictionaryBootstrap">
+        <property name="models">
+            <list>
+                <value>alfresco/extension/sfdbModel.xml</value>
+            </list>
+        </property>
+    </bean>
 
 	<bean id="webscript.projecttpl.get" class="com.sfdb.GetProjectMainTemplateWebscript"
 		parent="webscript">
